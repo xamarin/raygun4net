@@ -89,6 +89,7 @@ namespace Mindscape.Raygun4Net
       return this;
     }
 #else
+#if !CLIENT_PROFILE
     public IRaygunMessageBuilder SetHttpDetails(HttpContext context)
     {
       if (context != null)
@@ -98,6 +99,7 @@ namespace Mindscape.Raygun4Net
 
       return this;
     }
+#endif
 
     public IRaygunMessageBuilder SetVersion()
     {

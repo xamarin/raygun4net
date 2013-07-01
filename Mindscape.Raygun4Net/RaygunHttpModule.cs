@@ -3,6 +3,7 @@ using System.Web;
 
 namespace Mindscape.Raygun4Net
 {
+#if !CLIENT_PROFILE
   public class RaygunHttpModule : IHttpModule
   {
     public void Init(HttpApplication context)
@@ -30,4 +31,5 @@ namespace Mindscape.Raygun4Net
       return exception;
     }
   }
+#endif
 }

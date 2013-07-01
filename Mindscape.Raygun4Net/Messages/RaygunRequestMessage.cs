@@ -9,6 +9,7 @@ namespace Mindscape.Raygun4Net.Messages
 {
   public class RaygunRequestMessage
   {
+#if !CLIENT_PROFILE
     public RaygunRequestMessage(HttpContext context)
     {
       HostName = context.Request.Url.Host;
@@ -111,5 +112,6 @@ namespace Mindscape.Raygun4Net.Messages
 
     public IDictionary Headers { get; set; }
 
+#endif
   }
 }

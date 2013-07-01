@@ -9,6 +9,8 @@ namespace Mindscape.Raygun4Net
 {
   public interface IRaygunHttpMessageBuilder
   {
+#if !CLIENT_PROFILE
     IRaygunMessageBuilder SetHttpDetails(HttpContext context);
+#endif
   }
 }

@@ -615,7 +615,9 @@ namespace Mindscape.Raygun4Net
     internal RaygunMessage BuildMessage(Exception exception)
     {
       var message = RaygunMessageBuilder.New
+#if !CLIENT_PROFILE
         .SetHttpDetails(HttpContext.Current)
+#endif
         .SetEnvironmentDetails()
         .SetMachineName(Environment.MachineName)
         .SetExceptionDetails(exception)
