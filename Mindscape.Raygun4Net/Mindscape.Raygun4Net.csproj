@@ -35,7 +35,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -52,6 +51,7 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Helpers\LocalComputerInfo.cs" />
     <Compile Include="IRaygunHttpMessageBuilder.cs" />
     <Compile Include="IRaygunMessageBuilder.cs" />
     <Compile Include="Messages\RaygunClientMessage.cs" />

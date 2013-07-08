@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Web;
 using System.Threading;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 #endif
 
 namespace Mindscape.Raygun4Net
@@ -45,6 +46,11 @@ namespace Mindscape.Raygun4Net
 #if WINDOWS_PHONE
       Deployment.Current.Dispatcher.BeginInvoke(SendStoredMessages);
 #endif
+
+      // This may be required on machines where the stored certificates mean that the Raygun API cert is not validated, particularly on Mono
+      ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(
+        (sp, cert, request, error) => { return true; }
+      );
     }
 
     /// <summary>
@@ -53,7 +59,7 @@ namespace Mindscape.Raygun4Net
     /// </summary>
     public RaygunClient()
       : this(RaygunSettings.Settings.ApiKey)
-    {
+    {      
     }
 
     private bool ValidateApiKey()

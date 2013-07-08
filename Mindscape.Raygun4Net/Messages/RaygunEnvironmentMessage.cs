@@ -20,7 +20,7 @@ using Microsoft.Phone.Controls;
 using System.Web;
 using System.Windows.Forms;
 using System.Management;
-using Microsoft.VisualBasic.Devices;
+using Mindscape.Raygun4Net.Helpers;
 #endif
 
 namespace Mindscape.Raygun4Net.Messages
@@ -68,20 +68,28 @@ namespace Mindscape.Raygun4Net.Messages
       //ProcessorCount = Environment.ProcessorCount;
       // TODO: finish other values
 #else
-      WindowBoundsWidth = SystemInformation.VirtualScreen.Height;
-      WindowBoundsHeight = SystemInformation.VirtualScreen.Width;
-      ComputerInfo info = new ComputerInfo();
+      try
+      {
+        WindowBoundsWidth = SystemInformation.VirtualScreen.Height;
+        WindowBoundsHeight = SystemInformation.VirtualScreen.Width;
+      }
+      catch
+      {
+        // May occur on Mono or other environments where the screen cannot be accessed
+      }
+
       Locale = CultureInfo.CurrentCulture.DisplayName;
 
       DateTime now = DateTime.Now;
       UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(now).TotalHours;
-
-      OSVersion = info.OSVersion;
+      OSVersion = Environment.OSVersion.Version.ToString();
 
       if (!RaygunSettings.Settings.MediumTrust)
       {
         try
         {
+          var info = new LocalComputerInfo();
+
           Architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
           TotalPhysicalMemory = (ulong)info.TotalPhysicalMemory / 0x100000; // in MB
           AvailablePhysicalMemory = (ulong)info.AvailablePhysicalMemory / 0x100000;
@@ -114,20 +122,27 @@ namespace Mindscape.Raygun4Net.Messages
 #else
     private string GetCpu()
     {
-      ManagementClass wmiManagementProcessorClass = new ManagementClass("Win32_Processor");
-      ManagementObjectCollection wmiProcessorCollection = wmiManagementProcessorClass.GetInstances();
-
-      foreach (ManagementObject wmiProcessorObject in wmiProcessorCollection)
+      try
       {
-        try
+        ManagementClass wmiManagementProcessorClass = new ManagementClass("Win32_Processor");
+        ManagementObjectCollection wmiProcessorCollection = wmiManagementProcessorClass.GetInstances();
+
+        foreach (ManagementObject wmiProcessorObject in wmiProcessorCollection)
         {
-          var name = wmiProcessorObject.Properties["Name"].Value.ToString();
-          return name;
-        }
-        catch (ManagementException)
-        {
-        }
+          try
+          {
+            var name = wmiProcessorObject.Properties["Name"].Value.ToString();
+            return name;
+          }
+          catch (ManagementException)
+          {
+          }
+        }        
       }
+      catch (NotImplementedException)
+      {
+      }
+
       return Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
     }
 
