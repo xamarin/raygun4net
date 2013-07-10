@@ -9,11 +9,12 @@ namespace Mindscape.Raygun4Net.Messages
 {
   public class RaygunRequestMessage
   {
-    public RaygunRequestMessage(HttpContext context)
+    public RaygunRequestMessage(HttpContext context, HttpException exception)
     {
       HostName = context.Request.Url.Host;
       Url = context.Request.Url.AbsolutePath;
       HttpMethod = context.Request.RequestType;
+      HttpStatusCode = exception == null ? 0 : exception.GetHttpCode();
       IPAddress = context.Request.UserHostAddress;
       Data = ToDictionary(context.Request.ServerVariables);
       QueryString = ToDictionary(context.Request.QueryString);
@@ -94,6 +95,8 @@ namespace Mindscape.Raygun4Net.Messages
     public string Url { get; set; }
 
     public string HttpMethod { get; set; }
+
+    public int HttpStatusCode { get; set; }
 
     public string IPAddress { get; set; }
 

@@ -89,11 +89,11 @@ namespace Mindscape.Raygun4Net
       return this;
     }
 #else
-    public IRaygunMessageBuilder SetHttpDetails(HttpContext context)
+    public IRaygunMessageBuilder SetHttpDetails(HttpContext context, HttpException exception)
     {
       if (context != null)
       {
-        _raygunMessage.Details.Request = new RaygunRequestMessage(context);
+        _raygunMessage.Details.Request = new RaygunRequestMessage(context, exception);
       }
 
       return this;

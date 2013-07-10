@@ -640,7 +640,7 @@ namespace Mindscape.Raygun4Net
     internal RaygunMessage BuildMessage(Exception exception)
     {
       var message = RaygunMessageBuilder.New
-        .SetHttpDetails(HttpContext.Current)
+        .SetHttpDetails(HttpContext.Current, exception as HttpException)
         .SetEnvironmentDetails()
         .SetMachineName(Environment.MachineName)
         .SetExceptionDetails(exception)
