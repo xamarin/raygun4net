@@ -14,12 +14,20 @@ namespace Mindscape.Raygun4Net.Messages
       HostName = context.Request.Url.Host;
       Url = context.Request.Url.AbsolutePath;
       HttpMethod = context.Request.RequestType;
-      HttpStatusCode = exception == null ? 0 : exception.GetHttpCode();
       IPAddress = context.Request.UserHostAddress;
       Data = ToDictionary(context.Request.ServerVariables);
       QueryString = ToDictionary(context.Request.QueryString);
       Headers = ToDictionary(context.Request.Headers);
       Form = ToDictionary(context.Request.Form, true);
+
+      if (exception != null)
+      {
+        var httpStatusCode = exception.GetHttpCode();
+        if (httpStatusCode > 0)
+        {
+          HttpStatusCode = httpStatusCode;
+        }
+      }
 
       try
       {
@@ -96,7 +104,7 @@ namespace Mindscape.Raygun4Net.Messages
 
     public string HttpMethod { get; set; }
 
-    public int HttpStatusCode { get; set; }
+    public int? HttpStatusCode { get; set; }
 
     public string IPAddress { get; set; }
 
