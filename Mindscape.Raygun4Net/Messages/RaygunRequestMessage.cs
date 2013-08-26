@@ -65,6 +65,11 @@ namespace Mindscape.Raygun4Net.Messages
             }
           }
 
+          if (String.IsNullOrEmpty(keyToSend) || String.IsNullOrEmpty(valueToSend))
+          {
+            continue;
+          }
+
           dictionary.Add(keyToSend, valueToSend);
         }
         catch (HttpRequestValidationException e)
