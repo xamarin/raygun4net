@@ -56,6 +56,7 @@ namespace Mindscape.Raygun4Net
   public class RaygunClient
   {
     private readonly string _apiKey;
+    private ICredentials _credentials;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RaygunClient" /> class.
@@ -70,6 +71,12 @@ namespace Mindscape.Raygun4Net
 #elif ANDROID || IOS
       ThreadPool.QueueUserWorkItem(state => { SendStoredMessages(); });
 #endif
+    }
+
+    public RaygunClient(string apiKey, ICredentials credentials)
+      : this(apiKey)
+    {
+      _credentials = credentials;
     }
 
 #if !ANDROID && !IOS
@@ -1172,6 +1179,11 @@ namespace Mindscape.Raygun4Net
       {
         using (var client = new WebClient())
         {
+          if (_credentials != null)
+          {
+            client.Credentials = _credentials;
+          }
+
           client.Headers.Add("X-ApiKey", _apiKey);
           client.Encoding = System.Text.Encoding.UTF8;
 
