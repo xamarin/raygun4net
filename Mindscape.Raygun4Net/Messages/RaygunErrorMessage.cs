@@ -23,6 +23,11 @@ namespace Mindscape.Raygun4Net.Messages
     {
     }
 
+	public RaygunErrorMessage(StackTrace trace)
+	{
+		StackTrace = BuildStackTrace (trace);
+	}
+
     public RaygunErrorMessage(Exception exception)
     {
       var exceptionType = exception.GetType();
@@ -37,6 +42,52 @@ namespace Mindscape.Raygun4Net.Messages
         InnerError = new RaygunErrorMessage(exception.InnerException);
       }
     }
+
+	private RaygunErrorStackTraceLineMessage[] BuildStackTrace(StackTrace stackTrace)
+	{
+		var lines = new List<RaygunErrorStackTraceLineMessage> ();
+
+		var frames = stackTrace.GetFrames();
+
+		if (frames == null || frames.Length == 0) {
+			var line = new RaygunErrorStackTraceLineMessage { FileName = "none", LineNumber = 0 };
+			lines.Add(line);
+			return lines.ToArray();
+		}
+
+		foreach (StackFrame frame in frames)
+		{
+			MethodBase method = frame.GetMethod();
+
+			if (method != null) {
+				int lineNumber = frame.GetFileLineNumber();
+
+				if (lineNumber == 0) {
+					lineNumber = frame.GetILOffset();
+				}
+
+				var methodName = GenerateMethodName(method);
+
+				string file = frame.GetFileName();
+
+				string className = method.ReflectedType != null
+					? method.ReflectedType.FullName
+						: "(unknown)";
+
+				var line = new RaygunErrorStackTraceLineMessage
+				{
+					FileName = file,
+					LineNumber = lineNumber,
+					MethodName = methodName,
+					ClassName = className
+				};
+
+				lines.Add(line);
+			}
+		}
+
+		return lines.ToArray();
+	}
 
     private RaygunErrorStackTraceLineMessage[] BuildStackTrace(Exception exception)
     {      

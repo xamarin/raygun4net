@@ -33,7 +33,7 @@ using MonoTouch.Foundation;
 using System.Web;
 using System.Windows.Forms;
 using System.Management;
-using Microsoft.VisualBasic.Devices;
+//using Microsoft.VisualBasic.Devices;
 #endif
 
 namespace Mindscape.Raygun4Net.Messages
@@ -168,23 +168,23 @@ namespace Mindscape.Raygun4Net.Messages
 #else
       WindowBoundsWidth = SystemInformation.VirtualScreen.Height;
       WindowBoundsHeight = SystemInformation.VirtualScreen.Width;
-      ComputerInfo info = new ComputerInfo();
+      //ComputerInfo info = new ComputerInfo();
       Locale = CultureInfo.CurrentCulture.DisplayName;
 
       DateTime now = DateTime.Now;
       UtcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(now).TotalHours;
 
-      OSVersion = info.OSVersion;
+      OSVersion = "None specified"; // info.OSVersion;
 
       if (!RaygunSettings.Settings.MediumTrust)
       {
         try
         {
           Architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-          TotalPhysicalMemory = (ulong)info.TotalPhysicalMemory / 0x100000; // in MB
-          AvailablePhysicalMemory = (ulong)info.AvailablePhysicalMemory / 0x100000;
-          TotalVirtualMemory = info.TotalVirtualMemory / 0x100000;
-          AvailableVirtualMemory = info.AvailableVirtualMemory / 0x100000;
+          TotalPhysicalMemory = 1; // (ulong)info.TotalPhysicalMemory / 0x100000; // in MB
+          AvailablePhysicalMemory = 1; // (ulong)info.AvailablePhysicalMemory / 0x100000;
+          TotalVirtualMemory = 1; // info.TotalVirtualMemory / 0x100000;
+          AvailableVirtualMemory = 1; // info.AvailableVirtualMemory / 0x100000;
           GetDiskSpace();
           Cpu = GetCpu();
         }
@@ -294,6 +294,7 @@ namespace Mindscape.Raygun4Net.Messages
 #else
     private string GetCpu()
     {
+      /*
       ManagementClass wmiManagementProcessorClass = new ManagementClass("Win32_Processor");
       ManagementObjectCollection wmiProcessorCollection = wmiManagementProcessorClass.GetInstances();
 
@@ -309,6 +310,8 @@ namespace Mindscape.Raygun4Net.Messages
         }
       }
       return Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER");
+      */
+      return "Unspecified CPU";
     }
 
     private void GetDiskSpace()
