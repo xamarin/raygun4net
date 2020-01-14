@@ -147,7 +147,7 @@ static void Main (string[] args)
 
 ## Version numbering and tags
 
-* If you are plugging this provider into a classic .NET application, the version number that will be transmitted will be the AssemblyVersion. There is also an overload of Send() available where you can provide a different version if you wish (in the format x.x.x.x where x is a postive integer).
+* If you are plugging this provider into a classic .NET application, the version number that will be transmitted will be the AssemblyVersion. There is also an overload of Send() available where you can provide a different version if you wish (in the format x.x.x.x where x is a positive integer).
 
 * If you are using WinRT, the transmitted version number will be that of the Windows Store package, set in in Package.appxmanifest (under Packaging).
 
